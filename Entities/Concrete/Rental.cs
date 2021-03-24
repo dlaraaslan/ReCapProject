@@ -11,6 +11,6 @@ namespace Entities.Concrete
         public int CarId { get; set; }
         public int CustomerId { get; set; }
         public DateTime RentDate { get; set; }
-        public DateTime? RetrunDate { get; set; } //allow nulls 
+        public DateTime? ReturnDate { get; set; } //allow nulls 
     }
 }

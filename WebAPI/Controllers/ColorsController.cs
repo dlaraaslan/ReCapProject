@@ -17,6 +17,8 @@ namespace WebAPI.Controllers
         {
             _colorservice = colorService;
         }
+
+        [HttpPost("add")]
         public IActionResult Add(Color color)
         {
             var result = _colorservice.Add(color);
