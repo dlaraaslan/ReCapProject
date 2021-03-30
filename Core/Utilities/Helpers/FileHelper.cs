@@ -11,19 +11,49 @@ namespace Core.Utilities.Helpers
     {
         public static string Add(IFormFile file)
         {
-            string sourcePath = Path.GetTempFileName();
-
-            if (file.Length > 0)
+            var result = newPath(file);
+            try
             {
-                using (var stream = new FileStream(sourcePath, FileMode.Create))
-                {
-                    file.CopyTo(stream);
-                }
+                var sourcepath = Path.GetTempFileName();
+                if (file.Length > 0)
+                    using (var stream = new FileStream(sourcepath, FileMode.Create))
+                        file.CopyTo(stream);
+
+                File.Move(sourcepath, result.newPath);
+            }
+            catch (Exception exception)
+            {
+
+                return exception.Message;
             }
 
-            string destFileName = CreateNewFilePath(file);
-            File.Move(sourcePath, destFileName);
-            return destFileName;
+            return result.Path2;
+        }
+
+        public static string Update(string sourcePath, IFormFile file)
+        {
+            var result = newPath(file);
+
+            try
+            {
+                //File.Copy(sourcePath,result);
+
+                if (sourcePath.Length > 0)
+                {
+                    using (var stream = new FileStream(result.newPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+                }
+
+                File.Delete(sourcePath);
+            }
+            catch (Exception excepiton)
+            {
+                return excepiton.Message;
+            }
+
+            return result.Path2;
         }
 
         public static IResult Delete(string path)
@@ -40,32 +70,22 @@ namespace Core.Utilities.Helpers
             return new SuccessResult();
         }
 
-        public static string Update(string sourcePath, IFormFile file)
+        public static (string newPath, string Path2) newPath(IFormFile file)
         {
-            string result = CreateNewFilePath(file);
+            FileInfo ff = new FileInfo(file.FileName);
+            string fileExtension = ff.Extension;
 
-            if (sourcePath.Length > 0)
-            {
-                using (var stream = new FileStream(result, FileMode.Create))
-                {
-                    file.CopyTo(stream);
-                }
-            }
+            var creatingUniqueFilename = Guid.NewGuid().ToString("N")
+               + "_" + DateTime.Now.Month + "_"
+               + DateTime.Now.Day + "_"
+               + DateTime.Now.Year + fileExtension;
 
-            File.Delete(sourcePath);
-            return result;
-        }
 
-        public static string CreateNewFilePath(IFormFile file)
-        {
-            FileInfo fileInfo = new FileInfo(file.FileName);
-            string fileExtension = fileInfo.Extension;
+            string path = Environment.CurrentDirectory + @"\wwwroot\Images";
 
-            string path = Environment.CurrentDirectory + @"\Images";
-            string newPath = Guid.NewGuid().ToString() + fileExtension;
+            string result = $@"{path}\{creatingUniqueFilename}";
 
-            string result = $@"{path}\{newPath}";
-            return result;
+            return (result, $"\\Images\\{creatingUniqueFilename}");
         }
     }
 }

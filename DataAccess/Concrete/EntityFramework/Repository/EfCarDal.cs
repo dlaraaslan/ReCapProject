@@ -28,7 +28,8 @@ namespace DataAccess.Concrete.EntityFramework.Repository
                                  Descriptions = c.Descriptions,
                                  DailyPrice = c.DailyPrice,
                                  BrandName = b.BrandName,
-                                 ColorName = co.ColorName
+                                 ColorName = co.ColorName,
+                                 ImagePath = (from a in context.CarImages where a.CarId == c.CarId select a.ImagePath).FirstOrDefault()
                              };
 
                 return result.ToList();

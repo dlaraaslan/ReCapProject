@@ -60,6 +60,7 @@ namespace WebAPI.Controllers
         [HttpPost("add")]
         public IActionResult Add([FromForm(Name = ("Image"))] IFormFile file, [FromForm] CarImage carImage)
         {
+            carImage.ImageDate = DateTime.Now;
             var result = _carImageService.Add(file, carImage);
 
             if (result.Success)
