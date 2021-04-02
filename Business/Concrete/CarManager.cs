@@ -94,6 +94,16 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails());
         }
+        public IDataResult<List<CarDetailDto>> GetCarDetailsByColorId(int colorId)
+        {
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetailsByColorId(colorId));
+        }
+
+        public IDataResult<List<CarDetailDto>> GetCarDetailsByBrandId(int brandId)
+        {
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetailsByBrandId(brandId));
+        }
+
         [TransactionScopeAspect]
         public IResult AddTransactionalTest(Car car)
         {
@@ -104,6 +114,11 @@ namespace Business.Concrete
             }
             Add(car);
             return null;
+        }
+
+        public IDataResult<List<CarDetailDto>> GetCarDetailsById(int carId)
+        {
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetailsById(carId));
         }
     }
 }
